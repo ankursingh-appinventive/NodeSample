@@ -1,10 +1,46 @@
 const express = require('express')
+//.........................................................
+const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+//.........................................................
 
 const {plus,minus,mul,div,mod,sqr} = require("./calc");
 
 const app = express()
 const port = 5500
 app.use(express.json());
+//.........................................................................................
+const options ={
+    definition: {
+        openapi : '3.0.0',
+        info: {
+            title: 'NodeJS calculator api',
+            version: '1.0.0'
+        },
+        servers:[
+            {
+                url: 'http://localhost:5500/'
+            }
+        ]
+    },
+    apis: ['./index.js']
+}
+
+const swaggerSpec = swaggerJSDoc(options)
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+//............................................................................................
+/**
+ * @swagger
+ * /:
+ *  get:
+ *      summary: this api is used for calculator and check working or not
+ *      description: this api is used for calculator and check working or not
+ *      responses:
+ *          200:
+ *              description: To test calculator
+ */
+
+
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
